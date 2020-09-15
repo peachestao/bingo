@@ -4,7 +4,7 @@
 
 ## 快速使用
 
-### 1、下载 go get https://github.com/peachestao/bingo
+### 1、下载 go get github.com/peachestao/bingo
 ### 2、例子
 ~~~
 package main
