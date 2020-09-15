@@ -5,7 +5,7 @@
 ## 1、下载 go get https://github.com/peachestao/bingo
 ## 2、例子
 ~~~
- package main
+package main
 
 import (
 	"github.com/peachestao/bingo"
