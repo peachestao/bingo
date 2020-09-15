@@ -117,15 +117,6 @@ func(r *Router)Use(m MiddleWare)*Router{
 	r.middleWares=append(r.middleWares,m)
 	return r
 }
-///*
-//add a handler func,support chain invoke
-//*/
-//func(r *Router)Add(route string,handlers ...func( *Context)) *Router {
-//	for _,h:=range handlers{
-//		r.mux[route]=append(r.mux[route],HandlerFunc(h))
-//	}
-//	return r
-//}
 
 func(r *Router)GET(path string, handlers ...func(c *Context)) *Router{
 	r.Handle(http.MethodGet, path,handlers)
@@ -264,7 +255,7 @@ start a http server
 func (r *Router)Run(addr string )(err error){
 	err=http.ListenAndServe(addr,r)
     if(err!=nil) {
-		fmt.Printf("error hapend:%s", err.Error())
+		fmt.Printf("error happend:%s", err.Error())
 	}
 	return
 }
@@ -293,24 +284,15 @@ func(r *Router)ServeHTTP(w http.ResponseWriter,req *http.Request){
 
 	//if no bind middleWares then invoke the handler
 	path:=req.URL.Path
-	//handlers:=r.mux[path]
-	//if handlers==nil{
-	//	w.WriteHeader(http.StatusNotFound)
-	//	w.Write([]byte("your request resource not found\n"))
-	//	return
-	//}
-	//handlers[0].ServeHTTP(context)
 
 	if root := r.trees[req.Method]; root != nil {
 		if handles, ps, tsr := root.getValue(path, r.getParams); handles != nil {
 			context.handlers=handles
 			context.tsr=tsr
 			if ps != nil {
-				//context.handlers=handles
 				context.Params=*ps
 				r.putParams(ps)
 			} else {
-				//handles(w, req, nil)
 				context.Params=nil
 			}
 		}else{
@@ -318,6 +300,5 @@ func(r *Router)ServeHTTP(w http.ResponseWriter,req *http.Request){
 		}
 	}
 	context.Next()
-
 
 }

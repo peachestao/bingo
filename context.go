@@ -10,7 +10,6 @@ import (
 	//"fmt"
 	//"errors"
 	"encoding/json"
-	"fmt"
 )
 
 type Context struct{
@@ -39,9 +38,6 @@ func(c *Context)Next() (err error) {
 				c.handlerIndex++ //关键代码 必须在handler执行前进行，否则会一直调handler[0],导致无限循环，无法执行下面的代码
 				if c.handlerIndex > len(handlers) {
 					panic("no enough handlerfunc to invoke,please check Next() function invoke time\n")
-					//err=Error{"f","fas"}
-					//mErr.New("f","fas")
-					//err=mErr
 					return
 				}
 				c.W.statusCode=200
@@ -118,28 +114,6 @@ func(c *Context)Next() (err error) {
 			http.NotFound(c.W, c.Req)
 		}
 
-		//
-		//
-		//handlers := c.handlers
-		//if handlers == nil {
-		//	if c.bingo.mode == DEBUG {
-		//		fmt.Printf("your request resource not found\n")
-		//	}
-		//	c.W.WriteHeader(http.StatusNotFound)
-		//	c.W.Write([]byte("your request resource not found\n"))
-		//
-		//	return
-		//}
-		//c.handlerIndex++ //关键代码 必须在handler执行前进行，否则会一直调handler[0],导致无限循环，无法执行下面的代码
-		//if c.handlerIndex > len(handlers) {
-		//	panic("no enough handlerfunc to invoke,please check Next() function invoke time\n")
-		//	//err=Error{"f","fas"}
-		//	//mErr.New("f","fas")
-		//	//err=mErr
-		//	return
-		//}
-		//handlers[c.handlerIndex-1].ServeHTTP(c)
-		//c.handlerIndex++ 关键代码 自增量不能放在handler执行后执行，因为会一直调handler[0],导致无限循环，该行代码永远无法执行
 	} else { //if not last middleWare,then exec the next middleWare with inverted order
 		c.middleWareIndex++ //同handlerIndex 必须在middleWare执行前进行
 		r.middleWares[mLen-c.middleWareIndex]().ServeHTTP(c)
@@ -151,28 +125,11 @@ func(c *Context)Next() (err error) {
 返回json格式流
 */
  func(c *Context)JSON(httpStatus int , res Res){
- 	//if value,ok:=res["msg"]; ok{
- 	//	if value!=""{
-	//		res["msg"]= errors.GetMsg((res["code"].(int)))+" "+value.(string)
-	//	}else{
-	//		res["msg"]= errors.GetMsg((res["code"].(int)))
-	//	}
-	//}else{
-	//	res["msg"]= errors.GetMsg((res["code"].(int)))
-	//}
-
-	//将因token过期重新生成的token返回给客户端
-	 newToken:=c.DiyParam.Get("newToken")
-	 if newToken!=nil&&newToken!=""{
-		 res["newToken"]=newToken
-	 }
 
  	dataBytes,err:= json.Marshal(res)
  	if err!=nil{
  		panic("convert to json string error")
 	}
-	jsonStr:=string(dataBytes)
-	fmt.Printf("json:"+jsonStr)
 	c.W.statusCode=httpStatus
 	c.W.Header().Set("Content-Type","application/json") //设置header必须放在WriteHeader前面，否则无效
 	c.W.WriteHeader(httpStatus)
@@ -214,7 +171,6 @@ func(dp DiyParam)Get(key string)(value interface{}){
 获取get方式传值
 */
 func(c *Context)Query(key string)(value string){
-	//value=c.Req.Form.Get(key)  这种方法有问题？
 	value=c.Req.URL.Query().Get(key)
 	return
 }
