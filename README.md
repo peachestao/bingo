@@ -1,6 +1,6 @@
 ## bingo
 
-一个轻量级的golang restful api框架
+一个轻量级的golang restful api web框架,基于httprouter组件
 
 ## 快速使用
 
