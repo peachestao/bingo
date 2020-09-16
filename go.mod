@@ -1,3 +1,3 @@
-module github.com/peachestao/bingo
+module github.com/peachestao/rabbitgo
 
 go 1.13
