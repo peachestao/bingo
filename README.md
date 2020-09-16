@@ -97,8 +97,11 @@ engine.use(m MiddleWare),支持链式调用engine.use(m1).use(m2)...
 ~~~
 func logger()bingo.HandlerFunc{
 	return bingo.HandlerFunc(func(c *bingo.Context){
+	
 		startTime:= time.Now()
+		
 		c.Next()
+		
 		endTime:=time.Now()
 		path:=c.Req.URL.Path
 		takeTime:=strconv.FormatInt(endTime.Sub(startTime).Milliseconds(),10)// strconv.FormatInt((endTime-startTime),10)
@@ -150,7 +153,23 @@ engine.GET("/api/v1/hello", func(c *bingo.Context) {
 		})
 	})
 ~~~
-3）、JSON方法返回json格式响应数据,第一个参数为http 状态码，第二个参数为map类型的数据，可以自定义键值对  
+3）、Param方法获取存储url中":id"形式的可变参数值，通过Param("id")形式获取 
+
+如：http://127.0.0.1:8008/api/v1/hello/peachesTao
+~~~
+engine.GET("/api/v1/hello/:uid", func(c *bingo.Context) {
+
+               uid:=c.Param("uid")) 
+
+		c.JSON(200,bingo.Res{
+			"status":0,
+			"msg":"这是一个轻量级的golang restful api风格的后端框架",
+			"data":"hello "+uid,
+		})
+	})
+~~~
+
+4）、JSON方法返回json格式响应数据,第一个参数为http 状态码，第二个参数为map类型的数据，可以自定义键值对  
 ~~~
 engine.GET("/api/v1/hello", func(c *bingo.Context) {    
 		c.JSON(200,bingo.Res{
@@ -161,7 +180,7 @@ engine.GET("/api/v1/hello", func(c *bingo.Context) {
 		})
 	})
 ~~~
-4）、DiyParam属性用于各个handler之间传值，set方法用于设置某个key的值，get方法用于获取某个key值。它非常有用，比如请求过来后第一个handler负责认证,如果通过则解析出uid，然后通过DiyParam Set方法传递给其他handler,其他handler直接通过Get方法获取，不需要每个handler要获取uid时都去解析  
+5）、DiyParam属性用于各个handler之间传值，set方法用于设置某个key的值，get方法用于获取某个key值。它非常有用，比如请求过来后第一个handler负责认证,如果通过则解析出uid，然后通过DiyParam Set方法传递给其他handler,其他handler直接通过Get方法获取，不需要每个handler要获取uid时都去解析  
 ~~~
 
 func auth(c *bingo.Context){
