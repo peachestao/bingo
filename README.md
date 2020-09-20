@@ -213,5 +213,5 @@ func hello(c *bingo.Context) {
 
 engine.GET("/api/v1/hello", auth, hello)
 ~~~
-
+### 如果觉得对你有帮助，欢迎Star支持一下^_^
 
